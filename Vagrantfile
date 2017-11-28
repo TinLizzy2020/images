@@ -45,17 +45,26 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
+    add-apt-repository universe
+    add-apt-repository ppa:wireshark-dev/stable
+    add-apt-repository ppa:neovim-ppa/stable
+
     apt-get update
     apt-get install -y can-utils xfce4 virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 xserver-xorg-legacy
+    apt-get install -y wireshark wireshark-common
+
+    apt-get install -y software-properties-common
     apt-get install -y neovim
 
     apt-get install -y python-pip python-dev build-essential
     pip install --upgrade pip
     pip install --upgrade virtualenv
 
-    apt-get install -y python3-pip
+    apt-get install -y python3-dev python3-pip python3-setuptools
     pip3 install --upgrade pip
     pip3 install --upgrade virtualenv
+    pip3 install --upgrade neovim
+    chown -R vagrant.vagrant .local
 
     sed -i 's/allowed_users=.*$/allowed_users=anybody/' /etc/X11/Xwrapper.config
     VBoxClient-all
